@@ -1,0 +1,256 @@
+<html>
+  <head>
+    <title>Climate Change Visualization with R</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+    <link rel="icon" href="img/sakura.png" type="image/png"/>
+    <style>
+      pre {
+        background-color: #2d2d2d;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        margin-bottom: 20px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .speech-bubble {
+        position: relative;
+        background: #456651;
+        color: white;
+        padding: 15px 10px;
+        border-radius: 5px;
+      }
+
+      .speech-bubble::after {
+        content: '';
+        position: absolute;
+        top: 70%;
+        left: 0;
+        border: 10px solid transparent;
+        border-right-color: #456651;
+        border-left: 0;
+        border-top: 0;
+        margin-left: -10px;
+      }
+
+      #scrollArrow {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        width: 50px;
+        height: 50px;
+        background-image: url('img/arrow.png');
+        background-size: cover;
+        cursor: pointer;
+        display: none;
+      }
+
+      .custom-dotted-border {
+        border-width: 3px;
+        border-style: dotted;
+        border-color: #d9a899;
+        border-radius: 0.5rem;
+        border-spacing: 10px;
+      }
+    </style>
+  </head>
+  <body class="bg-[#e1ac9a] font-roboto">
+    <div class="container mx-auto">
+      <div class="text-center py-8">
+        <img alt="Logo with text 'Lili' and a small cat icon" class="mx-auto" height="100" src="img/lili.png" width="300"/>
+      </div>
+
+      <div class="flex mt-8">
+        <div class="w-2/3 bg-white p-6 rounded-lg shadow-md">
+          <div class="text-xs text-gray-400 mb-4 flex items-center space-x-2">
+            <a class="hover:underline flex items-center" href="#">
+              <i class="fas fa-home mr-1 text-gray-300"></i>
+              <a href="https://lia-me52.github.io/blog/" target="_blank">Home</a>            
+            </a>
+            <span>&gt;</span>
+            <a class="hover:underline flex items-center" href="#">
+              <i class="fas fa-code mr-1 text-gray-300"></i>
+              Climate Change Visualization with R
+            </a>
+          </div>
+          <h1 class="text-2xl font-bold mb-4">
+            <i class="fas fa-folder-open"></i> Climate Change Visualization with R
+          </h1>
+
+          <div class="mb-5">
+            <h2 class="text-3xl font-bold mb-2">
+              Analyzing Global Surface Temperature Trends Using R
+            </h2>
+            <div class="text-gray-500 text-sm mb-4">
+              <span>
+                <i class="far fa-clock"></i>
+                2024.01.20
+              </span>
+              <span class="ml-4">
+                <i class="far fa-comment"></i>
+                0
+              </span>
+            </div>
+
+            <img alt="Article image" class="w-full h-96 object-cover mb-6" src="img/temperature-card.png"/>
+
+            <div class="flex space-x-4 mt-4">
+              <a href="https://github.com/lia-me52" target="_blank" class="bg-black text-white px-8 py-2 rounded-lg">
+                <i class="fab fa-github"></i>
+              </a>
+              <a href="https://www.linkedin.com/in/mina-lia" target="_blank" class="bg-blue-600 text-white px-8 py-2 rounded-lg">
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <a href="https://lia-me52.github.io/blog/" target="_blank" class="bg-gray-800 text-white px-8 py-2 rounded-lg">
+                <i class="fas fa-blog"></i>
+              </a>
+            </div>                    
+
+            <div class="mt-8 flex items-start space-x-4">
+              <img alt="An icon" class="rounded-full border-2 border-green-200" height="50" src="img/github.png" width="60"/>
+              <div class="speech-bubble">
+                Here is the code, please have a look at the implementation.
+              </div>
+            </div>
+
+            <div class="mt-6 border-2 border-dashed border-[#d9a899] p-4 rounded-lg flex items-center space-x-4">
+              <a href="https://github.com/lia-me52/global-surface-change" target="_blank">
+              <img alt="A screenshot of a GitHub repository with a progress bar" class="w-48 h-24" height="90" src="img/github-temp.png" width="150"/>
+              <div>
+                <div class="font-bold text-lg">
+                  <a href="https://github.com/lia-me52/global-surface-change" target="_blank">
+                  GitHub - lia-me52/global-surface-temperature
+                </div>
+                <div class="text-gray-700">
+                  Contribute to lia-me52 climate change in R viz code by creating an account on GitHub.
+                </div>
+              </div>
+            </div>            
+
+            <h3 class="text-2xl font-bold text-gray-700 mt-8 mb-4">Code Explanation</h3>
+            <p class="text-gray-700 mb-4">
+              In this post, we will walk through the code used to visualize global surface temperature trends over time using R and the <strong>tidyverse</strong> ecosystem.
+            </p>
+
+            <pre><code>
+<span class="line-number">1</span> <span class="keyword">library</span>(<span class="string">'tidyverse'</span>)
+<span class="line-number">2</span> <span class="keyword">library</span>(<span class="string">'showtext'</span>)
+<span class="line-number">3</span> <span class="keyword">library</span>(<span class="string">'ggpubr'</span>)
+            </code></pre>
+
+            <p class="text-gray-700 mt-8 mb-4">
+              Then, we load the temperature data from multiple CSV files, each containing data from different hemispheres or specific temperature zones.
+            </p>
+
+            <pre><code>
+<span class="line-number">5</span> global_temps <span class="keyword">←</span> <span class="keyword">read_csv</span>(<span class="string">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-07-11/global_temps.csv'</span>)
+<span class="line-number">6</span> nh_temps <span class="keyword">←</span> <span class="keyword">read_csv</span>(<span class="string">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-07-11/nh_temps.csv'</span>)
+<span class="line-number">7</span> sh_temps <span class="keyword">←</span> <span class="keyword">read_csv</span>(<span class="string">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-07-11/sh_temps.csv'</span>)
+<span class="line-number">8</span> zonann_temps <span class="keyword">←</span> <span class="keyword">read_csv</span>(<span class="string">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-07-11/zonann_temps.csv'</span>)
+            </code></pre>
+
+            <p class="text-gray-700 mt-8 mb-4">
+              After loading the data, we process it by combining the data from both hemispheres and reshaping it into a long format to prepare it for visualization.
+            </p>
+
+            <pre><code>
+<span class="line-number">9</span> nh_temps <span class="keyword">%</span>
+  <span class="keyword">mutate</span>(<span class="string">'Hemisphere'</span> <span class="keyword">=</span> <span class="string">'Northern Hemisphere'</span>) <span class="keyword">%</span>
+  <span class="keyword">rbind</span>(sh_temps <span class="keyword">%</span> <span class="keyword">mutate</span>(<span class="string">'Hemisphere'</span> <span class="keyword">=</span> <span class="string">'Southern Hemisphere'</span>)) <span class="keyword">%</span>
+  <span class="keyword">select</span>(<span class="string">'Year'</span>, <span class="string">'Hemisphere'</span>, <span class="string">'DJF'</span>, <span class="string">'MAM'</span>, <span class="string">'JJA'</span>, <span class="string">'SON'</span>) <span class="keyword">%</span>
+  <span class="keyword">pivot_longer</span>(<span class="string">cols</span> <span class="keyword">=</span> <span class="string">DJF:SON</span>, <span class="string">names_to</span> <span class="keyword">=</span> <span class="string">'season'</span>, <span class="string">values_to</span> <span class="keyword">=</span> <span class="string">'temp'</span>)
+            </code></pre>
+            
+            <p class="text-gray-700 mt-8 mb-4">
+              The data is then plotted using ggplot2, where we highlight the seasonal temperature anomalies relative to a baseline period, creating a visually insightful graphic of temperature trends.
+            </p>
+
+            <pre><code>
+<span class="line-number">15</span> ggplot(aes(<span class="string">'Year'</span>, <span class="string">'temp'</span>)) <span class="keyword">+</span>
+  <span class="keyword">geom_point</span>(<span class="keyword">aes</span>(<span class="string">'color'</span> <span class="keyword">=</span> <span class="string">'season'</span>)) <span class="keyword">+</span>
+  <span class="keyword">geom_hline</span>(<span class="keyword">yintercept</span> <span class="keyword">=</span> <span class="number">0</span>) <span class="keyword">+</span>
+  <span class="keyword">geom_segment</span>(<span class="keyword">aes</span>(<span class="string">'x'</span> <span class="keyword">=</span> <span class="string">'Year'</span>, <span class="string">'y'</span> <span class="keyword">=</span> <span class="string">'temp'</span>, <span class="string">'xend'</span> <span class="keyword">=</span> <span class="string">'Year'</span>, <span class="string">'yend'</span> <span class="keyword">=</span> <span class="number">0</span>)) <span class="keyword">+</span>
+  <span class="keyword">geom_bracket</span>(<span class="keyword">aes</span>(<span class="string">'xmin'</span> <span class="keyword">=</span> <span class="number">1951</span>, <span class="string">'xmax'</span> <span class="keyword">=</span> <span class="number">1980</span>, <span class="string">'label'</span> <span class="keyword">=</span> <span class="string">'Average'</span>)) <span class="keyword">+</span>
+  <span class="keyword">facet_wrap</span>(<span class="string">'~Hemisphere'</span>) <span class="keyword">+</span>
+  <span class="keyword">labs</span>(
+    <span class="string">'title'</span> <span class="keyword">=</span> <span class="string">'Global Surface Temperature Change Overtime'</span>, 
+    <span class="string">'subtitle'</span> <span class="keyword">=</span> <span class="string">'This visualization presents the long-term variations in global surface temperatures, broken down by meteorological seasons.'</span>, 
+    <span class="string">'caption'</span> <span class="keyword">=</span> <span class="string">'Lia-me52 | Data from GISTEMP'</span>
+  )
+            </code></pre>
+
+            <h3 class="text-lg font-semibold mt-8">Final Thoughts</h3>
+            <p class="text-gray-700 mb-4">
+              By using this approach, we can generate informative visualizations that shed light on how global temperatures are changing over the years, providing valuable insights into climate trends.
+            </p>
+
+            <img src="img/surface_temperature.png" alt="Temperature Surface Result" class="w-full h-auto mt-8" />
+
+            <div class="mt-8 flex items-start space-x-4">
+              <img alt="An icon" height="50" src="img/cat.png" width="60"/>
+              <div class="speech-bubble">
+                Thank you!!<br> have a great day :)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-1/3 pl-6">
+          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <div class="custom-dotted-border p-4">
+              <div class="text-center">
+                <img alt="Profile picture" class="w-24 h-24 mx-auto rounded-lg mb-4" height="100" src="img/hello.gif" width="100"/>
+                <h2 class="text-xl font-bold">Lili</h2>
+                <p class="text-gray-700 mt-2">
+                  I'm a software engineer with experience in SQL, R, JavaScript, databases, and product development.
+                  When I'm not coding, I'm probably chasing my pug around!
+                </p>
+              </div>
+            </div>
+            <h2 class="text-xl font-bold mb-4 bg-[#d9a899] text-white px-2 py-3 rounded mt-6">
+              Latest posts
+            </h2>
+            <div class="space-x-4">
+              <a href="post1.html">
+                <img alt="Thumbnail for other post" class="w-full h-48 rounded-lg" height="200" src="img/temperature-card.png" />
+              </a>
+            </div>
+            <div class="space-x-4">
+              <a href="post2.html">
+                <img alt="Thumbnail for other post" class="w-full h-48 rounded-lg" height="200" src="img/squirrel-card.png" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="bg-[#e1ac9a] text-black py-6 mt-8">
+        <div class="container mx-auto text-left ml-16">
+          <p style="font-family: 'Gamja Flower', cursive; font-size: 20px;">
+            Made with 🌺 by Lili
+          </p>
+        </div>
+      </footer>
+      <div id="scrollArrow"></div>
+      <script>
+        window.onscroll = function() {
+          var arrow = document.getElementById("scrollArrow");
+          if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            arrow.style.display = "block";
+          } else {
+            arrow.style.display = "none";
+          }
+        };
+
+        document.getElementById("scrollArrow").onclick = function() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+      </script>
+  </body>
+</html>

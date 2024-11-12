@@ -1,0 +1,242 @@
+<html>
+  <head>
+    <title>Squirrel Data Visualization in NYC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+    <link rel="icon" href="img/sakura.png" type="image/png"/>
+    <style>
+      pre {
+        background-color: #2d2d2d;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        margin-bottom: 20px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .speech-bubble {
+        position: relative;
+        background: #456651;
+        color: white;
+        padding: 15px 10px;
+        border-radius: 5px;
+      }
+      .speech-bubble::after {
+        content: '';
+        position: absolute;
+        top: 70%;
+        left: 0;
+        border: 10px solid transparent;
+        border-right-color: #456651;
+        border-left: 0;
+        border-top: 0;
+        margin-left: -10px;
+      }
+
+      #scrollArrow {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        width: 50px;
+        height: 50px;
+        background-image: url('img/arrow.png');
+        background-size: cover;
+        cursor: pointer;
+        display: none;
+      }
+      
+    </style>
+  </head>
+  <body class="bg-[#e1ac9a] font-roboto">
+    <div class="container mx-auto">
+      <div class="text-center py-8">
+        <img alt="Logo with text 'JJ's' and a small cat icon" class="mx-auto" height="100" src="img/lili.png" width="300"/>
+      </div>
+
+      <div class="flex mt-8">
+        <div class="w-2/3 bg-white p-6 rounded-lg shadow-md">
+          <div class="text-xs text-gray-400 mb-4 flex items-center space-x-2">
+            <a class="hover:underline flex items-center" href="#">
+              <i class="fas fa-home mr-1 text-gray-300"></i>
+              <a href="https://lia-me52.github.io/blog/" target="_blank">Home</a>            
+            </a>
+            <span>&gt;</span>
+            <a class="hover:underline flex items-center" href="#">
+              <i class="fas fa-map mr-1 text-gray-300"></i>
+              Squirrel Data Visualization in NYC
+            </a>
+          </div>
+          <h1 class="text-2xl font-bold mb-4">
+            <i class="fas fa-folder-open"></i> Squirrel Data Visualization in NYC
+          </h1>
+
+          <div class="mb-5">
+            <h2 class="text-3xl font-bold mb-2">
+              Mapping Squirrel Locations in Central Park Using R
+            </h2>
+            <div class="text-gray-500 text-sm mb-4">
+              <span>
+                <i class="far fa-clock"></i>
+                2024.02.23
+              </span>
+              <span class="ml-4">
+                <i class="far fa-comment"></i>
+                0
+              </span>
+            </div>
+
+            <img alt="Article image" class="w-full h-96 object-cover mb-6" src="img/temperature-card.png"/>
+
+            <div class="flex space-x-4 mt-4">
+              <a href="https://github.com/lia-me52" target="_blank" class="bg-black text-white px-8 py-2 rounded-lg">
+                <i class="fab fa-github"></i>
+              </a>
+              <a href="https://www.linkedin.com/in/mina-lia" target="_blank" class="bg-blue-600 text-white px-8 py-2 rounded-lg">
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <a href="https://lia-me52.github.io/blog/" target="_blank" class="bg-gray-800 text-white px-8 py-2 rounded-lg">
+                <i class="fas fa-blog"></i>
+              </a>
+            </div>  
+
+            <div class="mt-8 flex items-start space-x-4">
+              <img alt="A girl icon" class="rounded-full border-2 border-green-200" height="50" src="img/github.png" width="60"/>
+              <div class="speech-bubble">
+                Here is the code, please have a look at the implementation.
+              </div>
+            </div>
+
+            <div class="mt-6 border-2 border-dashed border-[#d9a899] p-4 rounded-lg flex items-center space-x-4">
+              <a href="https://github.com/lia-me52/central-park-squirrel-census" target="_blank">
+                <img alt="A screenshot of a GitHub repository with a progress bar" class="w-48 h-24" height="90" src="img/github-squirrel.png" width="150"/>
+              </a>
+            
+              <div>
+                <div class="font-bold text-lg">
+                  <a href="https://github.com/lia-me52/central-park-squirrel-census" target="_blank" class="text-blue-600 hover:text-blue-800">
+                    GitHub - lia-me52/central-park-squirrel-census
+                  </a>
+                </div>
+                
+                <div class="text-gray-700">
+                  Contribute to lia-me52 central park squirrel census viz code by creating an account on GitHub.
+                </div>
+              </div>
+            </div>            
+
+            <h3 class="text-2xl font-bold text-gray-700 mt-8 mb-4">Code Explanation</h3>
+            <p class="text-gray-700 mb-4">
+              In this post, we’ll explain how to visualize squirrel sightings within Central Park using data from OpenStreetMap and a public dataset. The goal is to map the locations of squirrels by their fur color.
+            </p>
+
+            <p class="text-gray-700 mt-8 mb-4">
+              First, we load the necessary libraries, including <strong>tidyverse</strong> for data manipulation, <strong>janitor</strong> for cleaning data, and <strong>osmdata</strong> to pull OpenStreetMap data.
+            </p>
+
+            <pre><code>
+<span class="line-number">1</span> <span class="keyword">library</span>(<span class="string">'tidyverse'</span>)
+<span class="line-number">2</span> <span class="keyword">library</span>(<span class="string">'janitor'</span>)
+<span class="line-number">3</span> <span class="keyword">library</span>(<span class="string">'osmdata'</span>)
+<span class="line-number">4</span> <span class="keyword">library</span>(<span class="string">'showtext'</span>)
+<span class="line-number">5</span> <span class="keyword">library</span>(<span class="string">'sf'</span>)
+            </code></pre>
+
+            <p class="text-gray-700 mt-8 mb-4">
+              Then, we retrieve geographical data about the city and its roads, followed by the squirrel sighting data. The data is cleaned and transformed for plotting.
+            </p>
+
+            <pre><code>
+<span class="line-number">6</span> city_bb <span class="keyword">=</span> <span class="keyword">getbb</span>(<span class="string">'New York City'</span>)
+<span class="line-number">7</span> city_roads <span class="keyword">=</span> city_bb <span class="keyword">%</span>%
+  <span class="keyword">opq</span>() <span class="keyword">%</span>
+  <span class="keyword">add_osm_feature</span>(<span class="string">'highway'</span>) <span class="keyword">%</span>
+  <span class="keyword">osmdata_sf</span>()
+            </code></pre>
+
+            <p class="text-gray-700 mt-8 mb-4">
+              Finally, we use `ggplot2` to create a map visualizing the distribution of squirrels by their fur color.
+            </p>
+
+            <pre><code>
+<span class="line-number">8</span> ggplot() +
+  <span class="keyword">geom_sf</span>(<span class="keyword">data</span> = city_roads_lines, <span class="keyword">colour</span> = <span class="string">'#6a5a00'</span>, <span class="keyword">alpha</span> = 0.5) <span class="keyword">+</span>
+  <span class="keyword">geom_sf</span>(<span class="keyword">data</span> = city_water_polygons, <span class="keyword">fill</span> = <span class="string">'#7fc0ff'</span>) <span class="keyword">+</span>
+  <span class="keyword">geom_point</span>(<span class="keyword">data</span> = squirrel_data, <span class="keyword">aes</span>(<span class="string">'x'</span>, <span class="string">'y'</span>, <span class="keyword">color</span> = <span class="string">'fur_color'</span>)) <span class="keyword">+</span>
+  <span class="keyword">scale_color_manual</span>(<span class="string">'fur_color'</span>, <span class="string">'Squirrel Fur Colors'</span>)
+            </code></pre>
+
+            <p class="text-gray-700 mt-8 mb-4">
+              The final chart:
+            </p>
+            <div class="mt-2">
+              <img alt="Squirrel Census Result" src="img/squirrel_census.png" width="300" height="200"/>
+            </div>
+
+            <div class="mt-8 flex items-start space-x-4">
+              <img alt="A girl icon" height="50" src="img/cat.png" width="60"/>
+              <div class="speech-bubble">
+                This map provides an insightful look into the distribution of squirrels within Central Park.
+                <br> Have a great day :)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-1/3 pl-6">
+          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <div class="custom-dotted-border p-4">
+              <div class="text-center">
+                <img alt="Profile picture" class="w-24 h-24 mx-auto rounded-lg mb-4" height="100" src="img/hello.gif" width="100"/>
+                <h2 class="text-xl font-bold">Lili</h2>
+                <p class="text-gray-700 mt-2">
+                  I'm a software engineer with experience in SQL, R, JavaScript, databases, and product development.
+                  When I'm not coding, I'm probably chasing my pug around!
+                </p>
+              </div>
+            </div>
+            <h2 class="text-xl font-bold mb-4 bg-[#d9a899] text-white px-2 py-3 rounded mt-6">
+              Latest posts
+            </h2>
+            <div class="space-x-4">
+              <a href="post1.html">
+                <img alt="Thumbnail for other post" class="w-full h-48 rounded-lg" height="200" src="img/temperature-card.png" />
+              </a>
+            </div>
+            <div class="space-x-4">
+              <a href="post2.html">
+                <img alt="Thumbnail for other post" class="w-full h-48 rounded-lg" height="200" src="img/squirrel-card.png" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="bg-[#e1ac9a] text-black py-6 mt-8">
+        <div class="container mx-auto text-left ml-16">
+          <p style="font-family: 'Gamja Flower', cursive; font-size: 20px;">
+            Made with 🌺 by Lili
+          </p>
+        </div>
+      </footer>
+      <div id="scrollArrow"></div>
+      <script>
+        window.onscroll = function() {
+          var arrow = document.getElementById("scrollArrow");
+          if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            arrow.style.display = "block";
+          } else {
+            arrow.style.display = "none";
+          }
+        };
+
+        document.getElementById("scrollArrow").onclick = function() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+      </script>
+    </body>
+</html>
